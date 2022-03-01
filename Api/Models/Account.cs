@@ -7,4 +7,5 @@ public class Account : BaseModel
     public string Name { get; set; }
     public string Doc {get; set;}
     public Status Status {get; set;}
+    public ICollection<UserAccount> UserAccountId {get; set;}
 }

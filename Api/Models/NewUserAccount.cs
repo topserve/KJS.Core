@@ -6,6 +6,8 @@ public class NewUserAccount
     public string Name { get; set; }
     public string Mail {get; set;}
     public string Doc {get; set;}
+    public string Password {get; set;}
+    public string salt {get; set;}
     public Status Status {get; set;}
     public DateTime CreateDate {get; set;}
     public DateTime UpdateDate {get; set;}

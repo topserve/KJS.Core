@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Api.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20220228145230_RegistreUser")]
+    [Migration("20220301140800_RegistreUser")]
     partial class RegistreUser
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -83,11 +83,19 @@ namespace Api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("UpdateDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("salt")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("NewUserAccountId");
 
@@ -128,6 +136,65 @@ namespace Api.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Api.Models.UserAccount", b =>
+                {
+                    b.Property<long>("UserAccountId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("UserAccountId"));
+
+                    b.Property<long?>("AccountId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("CreateId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("UpdateId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("UserAccountId");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserAccounts");
+                });
+
+            modelBuilder.Entity("Api.Models.UserAccount", b =>
+                {
+                    b.HasOne("Api.Models.Account", null)
+                        .WithMany("UserAccountId")
+                        .HasForeignKey("AccountId");
+
+                    b.HasOne("Api.Models.User", null)
+                        .WithMany("UserAccountId")
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Api.Models.Account", b =>
+                {
+                    b.Navigation("UserAccountId");
+                });
+
+            modelBuilder.Entity("Api.Models.User", b =>
+                {
+                    b.Navigation("UserAccountId");
                 });
 #pragma warning restore 612, 618
         }
