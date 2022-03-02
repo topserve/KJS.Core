@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Api.Models;
-using Api.Data;
 using Api.Repositry.Interface;
 using Api.Repositry.Request;
+using Api.Mapping;
+using Api.Models;
 
 namespace Api.Controllers;
 
@@ -10,24 +10,22 @@ namespace Api.Controllers;
 [Route("[controller]")]
 public class UserController : ControllerBase
 {
+
+    private readonly UserMapper _mapper;
     private readonly IUserRepository _repository;
     public  UserController(IUserRepository repository)
     {
         _repository = repository;
+        _mapper = new UserMapper();
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody]User user)
+    public async Task<IActionResult> Post(UserRequest userRequest)
     {
+        User user = _mapper.Map(userRequest);
         _repository.InsertUser(user);
         return await _repository.SaveChangesAsync()
-                ? Ok("susesso")
-                : BadRequest("erro");
-    }
-    
-    [HttpPost("[action]")]
-    public IActionResult NewUserAccount(NewUserAccountRequest newUserAccountRequest)
-    {
-        return Ok();
+                ? Ok("ok")
+                : BadRequest("Erro");
     }
 }
